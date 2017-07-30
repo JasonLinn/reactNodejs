@@ -2,9 +2,10 @@ const express = require('express');
 var app = express();
 
 
-app.get('/',function(res,req) {
-    console.log(`123r`)
+app.get('/',(res,req)=>{
+    res.setEncoding({hi:'there'});
 })
 
-app.listen(5000);
-console.log(`node server run in port 5000...`)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT);
+console.log(`node server run in port ${PORT}...`)
