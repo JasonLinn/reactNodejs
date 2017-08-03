@@ -23,22 +23,22 @@ passport.use(new GoogleStrategy({
         callbackURL: '/auth/google/callback',
         proxy:true //告訴passport 不管到哪個proxy都讓它通過
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
         // console.log('access token', accessToken);
         // console.log('refresh token', refreshToken);
         // console.log('profile:', profile);
-        User.findOne({googleId:profile.id}) //return promise
-            .then((existingUser)=>{
-                if(existingUser){
-                    //we already have a record with given profile ID
-                    console.log('wellcom:',existingUser);
-                    done(null,existingUser);  //告訴passport結束，傳入null(err)代表OK
-                }else{
-                    //we don't have a user record
-                    new User({ googleId:profile.id}) //創造一個mongoose 模型(model)實體(instance)
-                        .save() //存到mongoDB
-                        .then(user=>done(null,user)); //回傳callback,mongoDB裡的user
-                }
-            })
+        const existingUser = await User.findOne({googleId:profile.id}) //return promise
+            
+        if(existingUser){
+            //we already have a record with given profile ID
+            console.log('wellcom:',existingUser);
+            return done(null,existingUser);  //告訴passport結束，傳入null(err)代表OK
+        }
+        //we don't have a user record
+        const user = await new User({ googleId:profile.id}) //創造一個mongoose 模型(model)實體(instance)
+            .save() //存到mongoDB
+        done(null,user);//回傳callback,mongoDB裡的user
+        
+           
     }
 ));
