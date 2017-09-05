@@ -4,11 +4,13 @@ class Header extends Component {
   renderContent(){
     switch (this.props.auth) {
       case null:
-        return 'Still deciding'  
+        return //尚未讀取時顯示
       case false:
-        return 'im loggedout'
+        return (
+          <li><a href="/auth/google">使用google 登入</a></li>
+        )
       default:
-        return 'im logged in'
+        return <li><a>登出</a></li>
 
     }
   }
